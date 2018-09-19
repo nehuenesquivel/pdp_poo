@@ -1,16 +1,36 @@
 object rolando {
-	var valorBase = 3
-	var hechizoPreferido = hechizoEspecial
+	var valorBaseDeHechiceria = 3
+	var hechizoPreferido
+	var valorBaseDeLucha = 1
+	var artefactos = []
 
-	method nivelDeHechiceria() = valorBase * hechizoPreferido.poder() + fuerzaOscura.valor()
-	
+	method nivelDeHechiceria() = valorBaseDeHechiceria * hechizoPreferido.poder() + fuerzaOscura.valor()
+
 	method hechizoPreferido(_hechizoPreferido) {
 		hechizoPreferido = _hechizoPreferido
 	}
-	
+
 	method poderoso() {
 		return hechizoPreferido.poderoso()
 	}
+
+	method habilidadParaLaLucha() = valorBaseDeLucha + self.unidadesDeLucha()
+	
+	method unidadesDeLucha() = artefactos.map({artefacto => artefacto.unidadesDeLucha()}).sum()
+
+	method valorBaseDeLucha(_valorBaseDeLucha) {
+		valorBaseDeLucha = _valorBaseDeLucha
+	}
+
+	method agregarArtefacto(_artefacto) {
+		artefactos = artefactos + [_artefacto]
+	}
+
+	method removerArtefacto(_artefacto) {
+		artefactos = artefactos.filter({artefacto => artefacto != _artefacto})
+	}
+
+	method mayorHabilidadParaLaLucha() = self.habilidadParaLaLucha() > self.nivelDeHechiceria()
 }
 
 class Hechizo {
@@ -45,10 +65,32 @@ object fuerzaOscura {
 	method duplicada() {
 		valor = valor * 2
 	}
+	
+	method dividida() = valor / 2
 }
 
 object eclipse {
 	method inicia() {
 		fuerzaOscura.duplicada()
 	}
+}
+
+class Artefacto {
+	method unidadesDeLucha()
+}
+
+object espadaDelDestino inherits Artefacto {
+	override method unidadesDeLucha() = 3
+}
+
+object collarDivino inherits Artefacto {
+	var cantidadDePerlas = 0
+
+	override method unidadesDeLucha() = cantidadDePerlas
+}
+
+object mascaraOscura inherits Artefacto {
+	var unidadesDeLuchaMinimas = 4
+
+	override method unidadesDeLucha() = unidadesDeLuchaMinimas.max(fuerzaOscura.dividida())
 }
