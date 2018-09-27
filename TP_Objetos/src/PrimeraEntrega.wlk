@@ -31,6 +31,8 @@ object rolando {
 	}
 
 	method mayorHabilidadParaLaLucha() = self.habilidadParaLaLucha() > self.nivelDeHechiceria()
+	
+	method mejorArtefacto() = artefactos.sortedBy({artefacto1, artefacto2 => artefacto1.unidadesDeLucha() > artefacto2.unidadesDeLucha()}).head()
 }
 
 class Hechizo {
@@ -49,12 +51,16 @@ object hechizoEspecial inherits Hechizo {
 	method nombre(_nombre) {
 		nombre = _nombre
 	}
+	
+	method valor() = self.poder()
 }
 
 object hechizoBasico inherits Hechizo {
 	override method poder() = 10
 
 	override method poderoso() = false
+	
+	method valor() = self.poder()
 }
 
 object fuerzaOscura {
@@ -93,4 +99,50 @@ object mascaraOscura inherits Artefacto {
 	var unidadesDeLuchaMinimas = 4
 
 	override method unidadesDeLucha() = unidadesDeLuchaMinimas.max(fuerzaOscura.dividida())
+}
+
+object armadura inherits Artefacto {
+	var refuerzo = ninguno
+	
+	method agregarRefuerzo(_refuerzo) {
+		refuerzo = _refuerzo
+	}
+	
+	override method unidadesDeLucha() = 2 + refuerzo.valor()
+}
+
+class Refuerzo {
+	method valor()
+}
+
+object cotaDeMalla inherits Refuerzo {
+	override method valor() = 1
+}
+
+object bendicion inherits Refuerzo {
+	override method valor() = rolando.nivelDeHechiceria()
+}
+
+object ninguno inherits Refuerzo {
+	override method valor() = 0
+}
+
+object espejo inherits Artefacto {
+	override method unidadesDeLucha() = rolando.mejorArtefacto().unidadesDeLucha()
+}
+
+object libroDeHechizos inherits Hechizo {
+	var hechizos = []
+	
+	method agregarHechizo(_hechizo) {
+		hechizos += _hechizo
+	}
+	
+	method hechizosPoderosos() = hechizos.filter({hechizo => hechizo.poderoso()})
+	
+	override method poder() = self.hechizosPoderosos().poder().sum()
+
+	override method poderoso() = self.hechizosPoderosos().length() > 0
+	
+	method valor() = self.poder()
 }
