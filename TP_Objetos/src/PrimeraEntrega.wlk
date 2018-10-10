@@ -33,6 +33,8 @@ object rolando {
 	method mayorHabilidadParaLaLucha() = self.habilidadParaLaLucha() > self.nivelDeHechiceria()
 	
 	method mejorArtefacto() = artefactos.sortedBy({artefacto1, artefacto2 => artefacto1.unidadesDeLucha() > artefacto2.unidadesDeLucha()}).head()
+	
+	method estaCargado() = artefactos.length() >= 5
 }
 
 class Hechizo {
@@ -91,6 +93,10 @@ object espadaDelDestino inherits Artefacto {
 
 object collarDivino inherits Artefacto {
 	var cantidadDePerlas = 0
+	
+	method cantidadDePerlas(_cantidadDePerlas) {
+		cantidadDePerlas = _cantidadDePerlas
+	}
 
 	override method unidadesDeLucha() = cantidadDePerlas
 }
