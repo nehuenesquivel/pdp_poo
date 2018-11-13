@@ -43,7 +43,7 @@ class Hechizo {
 	method poderoso()
 }
 
-object hechizoEspecial inherits Hechizo {
+class HechizoEspecial inherits Hechizo {
 	var nombre = "Espectro Malefico"
 
 	override method poder() = nombre.size()
@@ -57,10 +57,28 @@ object hechizoEspecial inherits Hechizo {
 	method valor() = self.poder()
 }
 
-object hechizoBasico inherits Hechizo {
+class HechizoBasico inherits Hechizo {
 	override method poder() = 10
 
 	override method poderoso() = false
+	
+	method valor() = self.poder()
+}
+
+class HechizoLogos inherits Hechizo {
+	var nombre
+	var multiploPoder
+
+	override method poder() = nombre.size() * multiploPoder
+
+	override method poderoso() = self.poder() > 15
+
+	method multiploPoder(_multiploPoder) {
+		multiploPoder = _multiploPoder
+	}
+	method nombre(_nombre) {
+		nombre = _nombre
+	}
 	
 	method valor() = self.poder()
 }
@@ -87,9 +105,11 @@ class Artefacto {
 	method unidadesDeLucha()
 }
 
-object espadaDelDestino inherits Artefacto {
+class Espada inherits Artefacto {
 	override method unidadesDeLucha() = 3
 }
+
+object espadaDelDestino inherits Espada {}
 
 object collarDivino inherits Artefacto {
 	var cantidadDePerlas = 0
@@ -101,13 +121,19 @@ object collarDivino inherits Artefacto {
 	override method unidadesDeLucha() = cantidadDePerlas
 }
 
-object mascaraOscura inherits Artefacto {
+class Mascara inherits Artefacto {
 	var unidadesDeLuchaMinimas = 4
-
-	override method unidadesDeLucha() = unidadesDeLuchaMinimas.max(fuerzaOscura.dividida())
+	var indiceDeOscuridad
+	
+	method indiceDeOscuridad(_indiceDeOscuridad) {
+		indiceDeOscuridad = _indiceDeOscuridad
+	}
+	override method unidadesDeLucha() = unidadesDeLuchaMinimas.max(fuerzaOscura.dividida() * indiceDeOscuridad)
 }
 
-object armadura inherits Artefacto {
+object mascaraOscura inherits Mascara {}
+
+class Armadura inherits Artefacto {
 	var refuerzo = ninguno
 	
 	method agregarRefuerzo(_refuerzo) {
@@ -121,11 +147,11 @@ class Refuerzo {
 	method valor()
 }
 
-object cotaDeMalla inherits Refuerzo {
+class CotaDeMalla inherits Refuerzo {
 	override method valor() = 1
 }
 
-object bendicion inherits Refuerzo {
+class Bendicion inherits Refuerzo {
 	override method valor() = rolando.nivelDeHechiceria()
 }
 
