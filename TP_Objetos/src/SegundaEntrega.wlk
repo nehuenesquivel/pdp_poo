@@ -1,4 +1,4 @@
-object rolando {
+class Personaje {
 	var valorBaseDeHechiceria = 3
 	var hechizoPreferido
 	var valorBaseDeLucha = 1
@@ -36,6 +36,8 @@ object rolando {
 	
 	method estaCargado() = artefactos.length() >= 5
 }
+
+object rolando inherits Personaje {}
 
 class Hechizo {
 	method poder()
