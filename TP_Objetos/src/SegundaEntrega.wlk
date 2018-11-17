@@ -4,6 +4,10 @@ class Personaje {
 	var property valorBaseDeLucha = 1
 	var artefactos = []
 	var property oro = 100
+	
+	method artefactos() {
+		return artefactos
+	}
 
 	method nivelDeHechiceria() = valorBaseDeHechiceria * hechizoPreferido.poder() + fuerzaOscura.valor()
 
@@ -61,7 +65,7 @@ class Hechizo {
 class HechizoEspecial inherits Hechizo {
 	var property nombre = "Espectro Malefico"
 
-	override method poder() = nombre.size()
+	override method poder() = nombre.length()
 
 	override method poderoso() = self.poder() > 15
 	
@@ -133,7 +137,13 @@ class Mascara inherits Artefacto {
 
 
 class Espejo inherits Artefacto {
-	override method unidadesDeLucha(personaje) = personaje.mejorArtefacto().unidadesDeLucha(personaje)
+	override method unidadesDeLucha(personaje) {
+		if (personaje.artefactos().size() == 1) {
+			return 0
+		} else {
+			return personaje.mejorArtefacto().unidadesDeLucha(personaje)
+		}
+	} 
 	override method precio(personaje) = 90
 }
 
