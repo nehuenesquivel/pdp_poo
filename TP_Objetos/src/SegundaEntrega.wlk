@@ -1,15 +1,11 @@
 class Personaje {
-	var valorBaseDeHechiceria = 3
-	var hechizoPreferido
-	var valorBaseDeLucha = 1
+	var property valorBaseDeHechiceria = 3
+	var property hechizoPreferido
+	var property valorBaseDeLucha = 1
 	var artefactos = []
-	var oro = 100
+	var property oro = 100
 
 	method nivelDeHechiceria() = valorBaseDeHechiceria * hechizoPreferido.poder() + fuerzaOscura.valor()
-
-	method hechizoPreferido(_hechizoPreferido) {
-		hechizoPreferido = _hechizoPreferido
-	}
 
 	method poderoso() {
 		return hechizoPreferido.poderoso()
@@ -19,96 +15,84 @@ class Personaje {
 	
 	method unidadesDeLucha() = artefactos.map({artefacto => artefacto.unidadesDeLucha(self)}).sum()
 
-	method valorBaseDeLucha(_valorBaseDeLucha) {
-		valorBaseDeLucha = _valorBaseDeLucha
-	}
-
 	method agregarArtefacto(_artefacto) {
-		artefactos = artefactos + [_artefacto]
+		artefactos.add(_artefacto)
 	}
 
 	method removerArtefacto(_artefacto) {
-		artefactos = artefactos.filter({artefacto => artefacto != _artefacto})
+		artefactos.remove(_artefacto)
 	}
 
 	method mayorHabilidadParaLaLucha() = self.habilidadParaLaLucha() > self.nivelDeHechiceria()
 	
 	method mejorArtefacto() = artefactos.sortedBy({artefacto1, artefacto2 => artefacto1.unidadesDeLucha() > artefacto2.unidadesDeLucha()}).head()
 	
-	method estaCargado() = artefactos.length() >= 5
+	method estaCargado() = artefactos.size() >= 5
+	
+	method cantidadDeArtefactos() = artefactos.size()
 	
 	method comprarArtefacto(_artefacto) {
-		oro = oro - _artefacto.precio(self)
-		artefactos = artefactos + [_artefacto]
+		if((_artefacto.precio(self)) <= oro) {
+			oro = oro - _artefacto.precio(self)
+			artefactos.add(_artefacto)
+		}
 	}
 	
+	method calcularCostoHechizo(_hechizo) = (_hechizo.precio() - (hechizoPreferido.precio()/2)).max(0)
+	
 	method comprarHechizo(_hechizo) {
-		oro = oro - (_hechizo.precio(self) - (hechizoPreferido.precio(self)/2)).max(0)
-		hechizoPreferido = _hechizo
+		if(self.calcularCostoHechizo(_hechizo) <= oro) {
+			oro = oro - self.calcularCostoHechizo(_hechizo)
+			hechizoPreferido = _hechizo
+		}
 	}
 }
 
-object rolando inherits Personaje {}
+/*object rolando inherits Personaje {}*/
 
 class Hechizo {
 	method poder()
 
 	method poderoso()
+	
+	method valor(personaje) = self.poder()
 }
 
 class HechizoEspecial inherits Hechizo {
-	var nombre = "Espectro Malefico"
+	var property nombre = "Espectro Malefico"
 
 	override method poder() = nombre.size()
 
 	override method poderoso() = self.poder() > 15
-
-	method nombre(_nombre) {
-		nombre = _nombre
-	}
 	
-	method valor() = self.poder()
 }
 
 class HechizoBasico inherits Hechizo {
 	
 	override method poder() = 10
-
 	override method poderoso() = false
-	
-	method valor() = self.poder()
-	
-	method precio(personaje) = 10
+	method precio() = 10
 }
 
 class HechizoLogos inherits Hechizo {
-	var nombre
-	var multiploPoder
+	var property nombre = "Hechizo Logos"
+	var multiploPoder = 1
 
-	override method poder() = nombre.size() * multiploPoder
-
+	override method poder() = nombre.length() * multiploPoder
 	override method poderoso() = self.poder() > 15
-
 	method multiploPoder(_multiploPoder) {
 		multiploPoder = _multiploPoder
 	}
-	method nombre(_nombre) {
-		nombre = _nombre
-	}
-	
-	method valor() = self.poder()
-	method precio(personaje) = self.poder()
+	method precio() = self.poder()
 }
 
 object fuerzaOscura {
 	var valor = 5
 
 	method valor() = valor
-
 	method duplicada() {
 		valor = valor * 2
 	}
-	
 	method dividida() = valor / 2
 }
 
@@ -128,76 +112,64 @@ class Espada inherits Artefacto {
 	override method precio(personaje) = self.unidadesDeLucha(personaje) * 5
 }
 
-object espadaDelDestino inherits Espada {}
+/*object espadaDelDestino inherits Espada {}*/
 
-object collarDivino inherits Artefacto {
-	var cantidadDePerlas = 0
-	
-	method cantidadDePerlas(_cantidadDePerlas) {
-		cantidadDePerlas = _cantidadDePerlas
-	}
+class CollarDivino inherits Artefacto {
+	var property cantidadDePerlas = 0
 
 	override method unidadesDeLucha(personaje) = cantidadDePerlas
-	
 	override method precio(personaje) = cantidadDePerlas * 2
 }
 
 class Mascara inherits Artefacto {
-	var unidadesDeLuchaMinimas = 4
-	var indiceDeOscuridad
+	var property unidadesDeLuchaMinimas = 4
+	var property indiceDeOscuridad = 0
 	
-	method indiceDeOscuridad(_indiceDeOscuridad) {
-		indiceDeOscuridad = _indiceDeOscuridad
-	}
 	override method unidadesDeLucha(personaje) = unidadesDeLuchaMinimas.max(fuerzaOscura.dividida() * indiceDeOscuridad)
-	
 	override method precio(personaje) = 0
 }
 
-object mascaraOscura inherits Mascara {}
+/*object mascaraOscura inherits Mascara {}*/
+
+
+class Espejo inherits Artefacto {
+	override method unidadesDeLucha(personaje) = personaje.mejorArtefacto().unidadesDeLucha(personaje)
+	override method precio(personaje) = 90
+}
+
 
 class Armadura inherits Artefacto {
-	var refuerzo = ninguno
-	
-	method agregarRefuerzo(_refuerzo) {
-		refuerzo = _refuerzo
-	}
+	var  property refuerzo = ninguno
 	
 	override method unidadesDeLucha(personaje) = 2 + refuerzo.valor(personaje)
-	
-	override method precio(personaje) = refuerzo.precio(self)
+	override method precio(personaje) = refuerzo.precio(self, personaje)
 }
 
 class Refuerzo {
 	method valor(personaje)
-	method precio(armadura)
+	method precio(armadura, personaje)
 }
 
 class CotaDeMalla inherits Refuerzo {
 	override method valor(personaje) = 1
-	override method precio(armadura) = armadura.unidadesDeLucha() / 2 
+	override method precio(armadura, personaje) = armadura.unidadesDeLucha(personaje) / 2 
 }
 
 class Bendicion inherits Refuerzo {
 	override method valor(personaje) = personaje.nivelDeHechiceria()
-	override method precio(armadura) = 2
+	override method precio(armadura, personaje) = 2
 }
 
 object ninguno inherits Refuerzo {
 	override method valor(personaje) = 0
-	override method precio(armadura) = 0
-}
-
-object espejo inherits Artefacto {
-	override method unidadesDeLucha(personaje) = personaje.mejorArtefacto().unidadesDeLucha()
-	override method precio(personaje) = 90
+	override method precio(armadura, personaje) = 0
 }
 
 object libroDeHechizos inherits Hechizo {
 	var hechizos = []
 	
 	method agregarHechizo(_hechizo) {
-		hechizos += _hechizo
+		hechizos.add( _hechizo)
 	}
 	
 	method hechizosPoderosos() = hechizos.filter({hechizo => hechizo.poderoso()})
@@ -206,7 +178,5 @@ object libroDeHechizos inherits Hechizo {
 
 	override method poderoso() = self.hechizosPoderosos().length() > 0
 	
-	method valor() = self.poder()
-	
-	method precio(personaje) = (hechizos.length() * 10) + hechizos.poder().sum() 
+	method precio() = (hechizos.length() * 10) + hechizos.poder().sum() 
 }
