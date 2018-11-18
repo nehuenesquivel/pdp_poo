@@ -68,21 +68,21 @@ describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
 		rolando.removerArtefacto(espadaDelDestino)
 		rolando.removerArtefacto(collarDivino)
 		rolando.removerArtefacto(mascaraOscura)
-		assert.equals(1, rolando.habilidadParaLaLucha())
+		assert.equals(1, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Conocer la habilidad para la lucha de Rolando con todos los artefactos" {
-		assert.equals(13, rolando.habilidadParaLaLucha())
+		assert.equals(13, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Cambiar la cantidad de perlas del collar divino a 3 y conocer la habilidad para la lucha de Rolando con todos los artefactos" {
 		collarDivino.cantidadDePerlas(3)
-		assert.equals(11, rolando.habilidadParaLaLucha())
+		assert.equals(11, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Cambiar el valor base para la lucha de Rolando a 8 y conocer la habilidad para la lucha de Rolando con todos los artefactos" {
 		rolando.valorBaseDeLucha(8)
-		assert.equals(20, rolando.habilidadParaLaLucha())
+		assert.equals(20, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Hacer que ocurra un eclipse. Preguntar por el valor de lucha de la mascara oscura" {
@@ -92,7 +92,7 @@ describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
 	
 	test "Eliminar la máscara oscura de los artefactos de Rolando. Conocer la habilidad para la lucha de Rolando" {
 		rolando.removerArtefacto(mascaraOscura)
-		assert.equals(9, rolando.habilidadParaLaLucha())
+		assert.equals(9, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	
@@ -124,7 +124,7 @@ describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
 	test "Saber cuánta habilidad para la lucha tiene Rolando." {
 		rolando.agregarArtefacto(armadura)
 		rolando.agregarArtefacto(espejo)
-		assert.equals(20,rolando.habilidadParaLaLucha())
+		assert.equals(20,rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Saber cuál es la habilidad para la lucha de la armadura de Rolando si tiene una bendición de refuerzo" {
@@ -162,7 +162,7 @@ describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
 		rolando.removerArtefacto(mascaraOscura)
 		
 		rolando.agregarArtefacto(espejo)
-		assert.equals(1,rolando.habilidadParaLaLucha())
+		assert.equals(1,rolando.habilidadParaLaLucha(rolando)) /*acá */
 	}
 	
 	test "Reemplazar al hechizo preferido por un libro de hechizos que contenga el Hechizo de Logos (con nombre “espectro maléfico”) y al hechizo básico. Saber cuál es el nivel de hechicería de Rolando." {
@@ -179,26 +179,26 @@ describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
 		
 		armadura2.refuerzo(cotaDeMalla2)
 		rolando.agregarArtefacto(armadura2)
-		assert.equals(37,rolando.habilidadParaLaLucha())
+		assert.equals(37,rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Conocer el precio de lista de un hechizo de logo cuyo nombre es alacachula cachicomula" {
-		assert.equals(22,hechizoLogos.precio())
+		assert.equals(22,hechizoLogos.precio(armadura,xenia))
 	}
 	
-	test "Xenia canjea el hechizo por un hechizo básico." {
-		xenia.comprarHechizo(hechizoBasico)
+	test "Xenia canjea el hechizo por un hechizo básico." { 
+		xenia.comprarHechizo(hechizoBasico,armadura)
 		assert.equals(100,xenia.oro())
 	}
 	
 	test "Thor canjea el hechizo por un hechizo de Logos." {
-		thor.comprarHechizo(hechizoLogos)
+		thor.comprarHechizo(hechizoLogos,armadura)
 		assert.equals(83,thor.oro())
 	}
 	
 	test "Hacer canjear dos veces a Thor el mismo hechizo básico." {
-		thor.comprarHechizo(hechizoBasico)
-		thor.comprarHechizo(hechizoBasico)
+		thor.comprarHechizo(hechizoBasico,armadura)
+		thor.comprarHechizo(hechizoBasico,armadura)
 		assert.equals(90,thor.oro())
 	}
 	
