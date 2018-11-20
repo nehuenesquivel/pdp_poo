@@ -17,7 +17,13 @@ object rolando {
 		hechizoPreferido = _hechizoPreferido
 	}
 
-	method poderoso() = hechizoPreferido.poderoso()
+	method poderoso() {
+		try {
+			return hechizoPreferido.poderoso()
+		} catch e {
+			return false
+		}
+	}
 
 	method habilidadParaLaLucha() = valorBaseDeLucha + self.unidadesDeLucha()
 
@@ -176,7 +182,13 @@ object hechizo inherits Refuerzo {
 
 	var hechizoActivo
 
-	override method valor() = hechizoActivo.poder()
+	override method valor() {
+		try {
+			return hechizoActivo.poder()
+		} catch e {
+			return 0
+		}
+	}
 
 	method hechizoActivo(_hechizoActivo) {
 		hechizoActivo = _hechizoActivo
