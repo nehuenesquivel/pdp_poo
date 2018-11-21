@@ -1,11 +1,11 @@
 import TerceraEntrega.* 
 
 describe "Tests" {
-	const rolando = new Personaje()
-	const xenia = new Personaje()
-	const thor = new Personaje()
-	const loki = new Personaje()
-	const furibunda = new Personaje ()
+	const rolando = new Personaje(10)
+	const xenia = new Personaje(15)
+	const thor = new Personaje(15)
+	const loki = new Personaje(1)
+	const furibunda = new Personaje (10)
 	const hechizoEspecial = new HechizoEspecial()
 	const hechizoBasico = new HechizoBasico()
 	const hechizoLogos = new HechizoLogos()
@@ -13,12 +13,16 @@ describe "Tests" {
 	const espadaDelDestino = new Espada()
 	const collarDivino = new CollarDivino()
 	const mascaraOscura = new Mascara()
+	const mascaraClara = new Mascara()
 	const armadura = new Armadura()
 	const armadura2 = new Armadura()
 	const espejo = new Espejo()
 	const bendicion = new Bendicion()
 	const cotaDeMalla = new CotaDeMalla()
 	const cotaDeMalla2 = new CotaDeMalla()
+	const espadaVieja = new Espada()
+	const espadaNueva = new Espada()
+	const espadaComun = new Espada()
 	
 	fixture {
 		rolando.hechizoPreferido(hechizoEspecial)
@@ -33,6 +37,18 @@ describe "Tests" {
 		loki.hechizoPreferido(hechizoBasico)
 		furibunda.hechizoPreferido(hechizoComercial)
 		loki.oro(5)
+		espadaVieja.fechaDeCompra(07/05/2006)
+		espadaVieja.peso(7)
+		espadaNueva.fechaDeCompra(new Date())
+		espadaNueva.peso(4)
+		/*ver como hacer lo de 50*/espadaComun.fechaDeCompra(new Date())
+		espadaComun.peso(5)
+		mascaraOscura.peso(3)
+		mascaraClara.indiceDeOscuridad(0)
+		mascaraClara.peso(2)
+		cotaDeMalla.peso(10)
+		collarDivino.peso(5)
+		armadura.peso(12)
 	}	
 
 /* Test Primera Entrega */
@@ -84,7 +100,7 @@ describe "Tests" {
 		rolando.removerArtefacto(espadaDelDestino)
 		rolando.removerArtefacto(collarDivino)
 		rolando.removerArtefacto(mascaraOscura)
-		assert.equals(1, rolando.habilidadParaLaLucha())
+		assert.equals(1, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Conocer la habilidad para la lucha de Rolando con todos los artefactos" {
@@ -92,7 +108,7 @@ describe "Tests" {
 		collarDivino.cantidadDePerlas(5)
 		rolando.agregarArtefacto(collarDivino)
 		rolando.agregarArtefacto(mascaraOscura)
-		assert.equals(13, rolando.habilidadParaLaLucha())
+		assert.equals(13, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Cambiar la cantidad de perlas del collar divino a 3 y conocer la habilidad para la lucha de Rolando con todos los artefactos" {
@@ -101,7 +117,7 @@ describe "Tests" {
 		rolando.agregarArtefacto(collarDivino)
 		rolando.agregarArtefacto(mascaraOscura)		
 		collarDivino.cantidadDePerlas(3)
-		assert.equals(11, rolando.habilidadParaLaLucha())
+		assert.equals(11, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Cambiar el valor base para la lucha de Rolando a 8 y conocer la habilidad para la lucha de Rolando con todos los artefactos" {
@@ -110,7 +126,7 @@ describe "Tests" {
 		rolando.agregarArtefacto(collarDivino)
 		rolando.agregarArtefacto(mascaraOscura)		
 		rolando.valorBaseDeLucha(8)
-		assert.equals(20, rolando.habilidadParaLaLucha())
+		assert.equals(20, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Hacer que ocurra un eclipse. Preguntar por el valor de lucha de la mascara oscura" {
@@ -119,7 +135,7 @@ describe "Tests" {
 		rolando.agregarArtefacto(collarDivino)
 		rolando.agregarArtefacto(mascaraOscura)		
 		eclipse.inicia()
-		assert.equals(5, mascaraOscura.unidadesDeLucha())
+		assert.equals(5, mascaraOscura.unidadesDeLucha(rolando))
 	}
 	
 	test "Eliminar la máscara oscura de los artefactos de Rolando. Conocer la habilidad para la lucha de Rolando" {
@@ -128,7 +144,7 @@ describe "Tests" {
 		rolando.agregarArtefacto(collarDivino)
 		rolando.agregarArtefacto(mascaraOscura)		
 		rolando.removerArtefacto(mascaraOscura)
-		assert.equals(9, rolando.habilidadParaLaLucha())
+		assert.equals(9, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Saber si Rolando está cargado" {
@@ -156,7 +172,7 @@ describe "Tests" {
 		rolando.agregarArtefacto(mascaraOscura)
 		rolando.agregarArtefacto(armadura)
 		rolando.agregarArtefacto(espejo)		
-		assert.equals(20, rolando.habilidadParaLaLucha())
+		assert.equals(20, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Saber cuál es la habilidad para la lucha de la armadura de Rolando si tiene una bendición de refuerzo" {
@@ -165,8 +181,8 @@ describe "Tests" {
 		rolando.agregarArtefacto(mascaraOscura)
 		rolando.agregarArtefacto(armadura)
 		rolando.agregarArtefacto(espejo)		
-		armadura.agregarRefuerzo(bendicion)
-		assert.equals(58, armadura.unidadesDeLucha())
+		armadura.refuerzo(bendicion)
+		assert.equals(58, armadura.unidadesDeLucha(rolando))
 	}
 	
 	test "Saber cuál es la habilidad para la lucha de la armadura de Rolando si tiene una cota de malla de refuerzo" {
@@ -175,8 +191,8 @@ describe "Tests" {
 		rolando.agregarArtefacto(mascaraOscura)
 		rolando.agregarArtefacto(armadura)
 		rolando.agregarArtefacto(espejo)		
-		armadura.agregarRefuerzo(cotaDeMalla)
-		assert.equals(3, armadura.unidadesDeLucha())
+		armadura.refuerzo(cotaDeMalla)
+		assert.equals(3, armadura.unidadesDeLucha(rolando))
 	}
 	
 	test "Saber cuál es la habilidad para la lucha de la armadura de Rolando si tiene un hechizo básico de refuerzo" {
@@ -185,8 +201,8 @@ describe "Tests" {
 		rolando.agregarArtefacto(mascaraOscura)
 		rolando.agregarArtefacto(armadura)
 		rolando.agregarArtefacto(espejo)		
-		armadura.agregarRefuerzo(hechizoBasico)
-		assert.equals(12, armadura.unidadesDeLucha())
+		armadura.refuerzo(hechizoBasico)
+		assert.equals(12, armadura.unidadesDeLucha(rolando))
 	}
 	
 	test "Saber cuál es la habilidad para la lucha de la armadura de Rolando si tiene un hechizo espectro maléfico de refuerzo" {
@@ -195,8 +211,8 @@ describe "Tests" {
 		rolando.agregarArtefacto(mascaraOscura)
 		rolando.agregarArtefacto(armadura)
 		rolando.agregarArtefacto(espejo)		
-		armadura.agregarRefuerzo(hechizoEspecial)
-		assert.equals(19, armadura.unidadesDeLucha())
+		armadura.refuerzo(hechizoEspecial)
+		assert.equals(19, armadura.unidadesDeLucha(rolando))
 	}
 	
 	test "Eliminar todos los artefactos de Rolando. Incorporar solamente el espejo. Saber cuál es la habilidad para la lucha de Rolando" {
@@ -211,7 +227,7 @@ describe "Tests" {
 		rolando.removerArtefacto(armadura)
 		rolando.removerArtefacto(espejo)
 		rolando.agregarArtefacto(espejo)		
-		assert.equals(1, rolando.habilidadParaLaLucha())
+		assert.equals(1, rolando.habilidadParaLaLucha(rolando))
 	}
 	
 	test "Reemplazar al hechizo preferido por un libro de hechizos que contenga el espectro malefico (con nombre “espectro malefico”) y al hechizo basico. Saber cual es el nivel de hechiceria de Rolando" {
@@ -254,19 +270,19 @@ describe "Tests" {
 	}
 	
 	
-	test "Xenia compra a Mock Hnos. una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5" {
+	test "Xenia compra a Mock Hnos. una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5. Ver cantidad de oro" {
 		/*ver que se hace aca */	
 		assert.equals(85.5,xenia.oro())		
 	}
 	
-	test "Xenia compra a Mock Hnos. una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5" {
+	test "Xenia compra a Mock Hnos. una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5. Ver cantidad de artefactos" {
 		/*ver que se hace aca */
 		assert.equals(4,xenia.cantidadDeArtefactos())
 	}
 	
 	test "Thor compra una armadura con bendición como refuerzo, y una armadura reforzada con el hechizo alacachula (del juego de datos). Cuántas monedas le quedan a Thor" {
 		armadura.refuerzo(bendicion)
-		thor.comprarArtefacto(armadura)
+			thor.comprarArtefacto(armadura)
 		armadura2.refuerzo(hechizoLogos)
 		thor.comprarArtefacto(armadura2)
 		assert.equals(74,thor.oro())
@@ -287,7 +303,7 @@ describe "Tests" {
 /* Test Tercera Entrega */
 	
 	test "Saber el nivel de hechicería de Furibunda" {
-		assert.equals(29, furibunda.nivelDeHechiceria())
+		assert.equals(29,furibunda.nivelDeHechiceria())
 	}
 	
 	test "Saber si el hechizo comercial es poderoso" {
@@ -295,104 +311,105 @@ describe "Tests" {
 	}
 	
 	test "Saber si el espectro maléfico es poderoso" {
-		assert.equals (true, hechizoMalefico.poderoso())	
+		assert.equals (true,hechizoMalefico.poderoso())	
 	}	
 	
 	test "Saber el peso de la espada vieja" {
-		/*hacerlo */
+		assert.equals(6,espadaVieja.peso())
 	}
 	
 	test "Saber el peso de la espada nueva" {
-		/* hacerlo */
+		assert.equals(4,espadaNueva.peso())
 	}
 	
 	test "Saber el peso de la espada común" {
-		/* hacerlo */
+		assert.equals(4.5,espadaComun.peso())
 	}
 	
 	test "Saber el peso del collar divino" {
-		/* hacerlo */
+		assert.equals(2.5,collarDivino.peso())
 	}
 	
 	test "Saber el peso de la máscara oscura" {
-		/* hacerlo */
+		assert.equals(3,mascaraOscura.peso())
 	}
 	
 	test "Hacer que ocurra un eclipse. Luego saber el peso de la máscara oscura" {
-		/* hacerlo */
+		eclipse.inicia()
+		assert.equals(5,mascaraOscura.peso())
 	}
 	
 	test "Saber el peso de la máscara clara" {
-		/* hacerlo */
+		assert.equals(2,mascaraClara.peso())
 	}
 	
-	test "Saber cuál es el peso total de la armadura con cota de malla" {
-		/* hacerlo */
+/*	test "Saber cuál es el peso total de la armadura con cota de malla" {
+		-- hacerlo 
 	}
 	
-	test "Saber cuál es el peso total de la armadura con hechizo par" {
-		/* hacerlo */
+	/*test "Saber cuál es el peso total de la armadura con hechizo par" {
+		hacerlo 
 	}
 	
 	test "Saber cuál es el peso total de la armadura con hechizo impar" {
-		/* hacerlo */
+		hacerlo 
 	}
 	
 	test "Saber cuál es el peso total de la armadura sin ningún tipo de refuerzo" {
-		/* hacerlo */
+		hacerlo 
 	}
 	
 	test "Merlin le compra a Mock Hnos. la máscara clara y la oscura (sin que haya eclipse). Calcular cuál es el peso total que carga Merlin" {
-		/* hacerlo */
+		hacerlo 
 	}
 	
 	test "Merlin le quiere comprar a Mock Hnos. la armadura con hechizo par" {
-		/*hacerlo */
+		hacerlo 
 	}
 	
 	test "Ursula carga con 14 kilos iniciales (11 de la armadura con cota de malla y 3 de la máscara oscura). Decide desprenderse de la armadura con cota de malla. Calcular cuál es el peso total con el que carga Ursula ahora" {
-		/* hacerlo */
+		 hacerlo 
 	}
 	
 	test "Conocer la habilidad para la lucha de navi" {
-		/*hacerlo */
+		hacerlo 
 	}
 	
 	test "Conocer la habilidad para la lucha de Ashley Graham" {
-		/* hacerlo */
+		 hacerlo 
 	} 
 	
 	test "Hacer que Ashley Graham tenga dificultad difícil. Conocer la habilidad para la lucha de Ashley Graham" {
-		/* hacerlo */
+		 hacerlo 
 	}
 	
 	test "Ursula comienza con 100 monedas.Luego compra la máscara oscura a Pastoriza" {
-		/* hacerlo */
+		 hacerlo 
 	}
 	
 	test "Ursula comienza con 100 monedas. Luego compra la máscara oscura a Prieto" {
-		/* hacerlo */
+		 hacerlo 
 	}
 	
 	test "Ursula comienza con 100 monedas.Luego compra la máscara oscura a Fermepin" {
-		/* hacerlo */
+		 hacerlo 
 	}
 	
 	test "Recategorizar a Pastoriza.Hacer que Ursula le compre la máscara oscura a Pastoriza" {
-		 /* hacerlo */
+		  hacerlo 
 	}
 	
 	test "Recategorizar dos veces a Pastoriza.Hacer que Ursula le compre la máscara oscura a Pastoriza" {
-		/* hacerlo */
+		 hacerlo 
 	}
 	
 	test "Recategorizar a Prieto.Hacer que Ursula le compre la máscara oscura a Prieto" {
-		/* hacerlo */
+		hacerlo 
 	}
 	
 	test "Recategorizar a Fermepin. Hacer que Ursula le compre la máscara oscura a Fermepin" {
-		/* hacerlo */
+		 hacerlo 
 	}
-	
+*/	
 	
 }

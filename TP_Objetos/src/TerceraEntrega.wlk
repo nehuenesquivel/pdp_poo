@@ -4,6 +4,11 @@ class Personaje {
 	var property valorBaseDeLucha = 1
 	var artefactos = []
 	var property oro = 100
+	const property pesoMaximo
+	
+	constructor (_pesoMaximo) {
+		pesoMaximo = _pesoMaximo
+	}
 	
 	method artefactos() {
 		return artefactos
@@ -37,10 +42,15 @@ class Personaje {
 	
 	method cantidadDeArtefactos() = artefactos.size()
 	
+	method pesoTotalArtefactos() = artefactos.map({artefacto => artefacto.pesoTotal(self)}).sum()
+	
 	method comprarArtefacto(_artefacto) {
-		if((_artefacto.precio(self)) <= oro) {
+		if((_artefacto.precio(self)) <= oro && (self.pesoTotalArtefactos() + _artefacto.pesoTotal(self)) <= pesoMaximo) {
 			oro = oro - _artefacto.precio(self)
+			_artefacto.fechaDeCompra(new Date())
 			artefactos.add(_artefacto)
+		} else {
+			throw new Exception("No tiene oro suficiente")
 		}
 	}
 	
@@ -50,6 +60,8 @@ class Personaje {
 		if(self.calcularCostoHechizo(_hechizo,_artefacto) <= oro) {
 			oro = oro - self.calcularCostoHechizo(_hechizo,_artefacto)
 			hechizoPreferido = _hechizo
+		} else {
+			throw new Exception("No tiene oro suficiente")
 		}
 	}
 }
@@ -57,11 +69,20 @@ class Personaje {
 /*object rolando inherits Personaje {}*/
 
 class Hechizo {
+	
 	method poder()
 
 	method poderoso()
 	
 	method valor(personaje) = self.poder()
+	
+	method peso() {
+		if (self.poder().isOdd()){
+			return 2
+		} else {
+			return 1
+		}
+	}
 }
 
 class HechizoEspecial inherits Hechizo {
@@ -109,6 +130,11 @@ object eclipse {
 }
 
 class Artefacto {
+	var property peso
+	var property fechaDeCompra
+	
+	method pesoTotal(personaje) = peso - self.factorDeCorreccion()
+	method factorDeCorreccion() = 1.max((new Date()-fechaDeCompra)/1000)
 	method precio(personaje)
 	method unidadesDeLucha(personaje)
 }
@@ -125,6 +151,9 @@ class CollarDivino inherits Artefacto {
 
 	override method unidadesDeLucha(personaje) = cantidadDePerlas
 	override method precio(personaje) = cantidadDePerlas * 2
+	override method pesoTotal(personaje) {
+		return super(personaje) + 0.5 * cantidadDePerlas
+	} 
 }
 
 class Mascara inherits Artefacto {
@@ -133,6 +162,13 @@ class Mascara inherits Artefacto {
 	
 	override method unidadesDeLucha(personaje) = unidadesDeLuchaMinimas.max(fuerzaOscura.dividida() * indiceDeOscuridad)
 	override method precio(personaje) = 0
+	override method pesoTotal(personaje) {
+		if (self.unidadesDeLucha(personaje)>3) {
+			return super(personaje) + self.unidadesDeLucha(personaje) - 3
+		} else {
+			return super(personaje)
+		}
+	}
 }
 
 /*object mascaraOscura inherits Mascara {}*/
@@ -155,14 +191,21 @@ class Armadura inherits Artefacto {
 	
 	override method unidadesDeLucha(personaje) = 2 + refuerzo.valor(personaje)
 	override method precio(personaje) = refuerzo.precio(self, personaje)
+	override method pesoTotal(personaje) {
+		return super(personaje) + self.refuerzo().peso()
+	}
 }
 
 class Refuerzo {
+	method peso() = 0
 	method valor(personaje)
 	method precio(armadura, personaje)
 }
 
 class CotaDeMalla inherits Refuerzo {
+	var property peso = 1
+	
+	override method peso() = peso
 	override method valor(personaje) = 1
 	override method precio(armadura, personaje) = armadura.unidadesDeLucha(personaje) / 2 
 }
@@ -194,7 +237,6 @@ object libroDeHechizos inherits Hechizo {
 }
 
 object hechizoComercial inherits Hechizo {
-
 	const nombre = "El Hechizo Comercial"
 	var porcentaje = 20
 	var multiplicador = 2
@@ -210,11 +252,9 @@ object hechizoComercial inherits Hechizo {
 	method multiplicador(_multiplicador) {
 		multiplicador = _multiplicador
 	}
-
 }
 
 class NPC inherits Personaje {
-
 	var nivel
 
 	override method habilidadParaLaLucha(_personaje) = super(_personaje) * nivel.valor()
@@ -222,30 +262,20 @@ class NPC inherits Personaje {
 	method nivel(_nivel) {
 		nivel = _nivel
 	}
-
 }
 
 class Nivel {
-
 	var valor
 
 	constructor(_valor) {
 		valor = _valor
 	}
-
+	
 	method valor() = valor
-
 }
 
-object facil inherits Nivel(1) {
+object facil inherits Nivel(1) {}
 
-}
+object moderado inherits Nivel(2) {}
 
-object moderado inherits Nivel(2) {
-
-}
-
-object dificil inherits Nivel(4) {
-
-}
-
+object dificil inherits Nivel(4) {}
