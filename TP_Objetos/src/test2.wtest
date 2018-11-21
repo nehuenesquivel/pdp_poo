@@ -1,0 +1,244 @@
+import example.*
+
+describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
+	const rolando = new Personaje()
+	const xenia = new Personaje()
+	const thor = new Personaje()
+	const loki = new Personaje()
+	const espectroMalefico = new HechizoEspecial()
+	const hechizoBasico = new HechizoBasico()
+	const hechizoLogos = new HechizoLogos()
+	const espadaDelDestino = new Espada()
+	const collarDivino = new CollarDivino()
+	const mascaraOscura = new Mascara()
+	const armadura = new Armadura()
+	const armadura2 = new Armadura()
+	const espejo = new Espejo()
+	const bendicion = new Bendicion()
+	const cotaDeMalla = new CotaDeMalla()
+	const cotaDeMalla2 = new CotaDeMalla()
+	
+	fixture {
+		rolando.hechizoPreferido(espectroMalefico)
+		collarDivino.cantidadDePerlas(5)
+		mascaraOscura.indiceDeOscuridad(1)
+		rolando.agregarArtefacto(espadaDelDestino)
+		rolando.agregarArtefacto(collarDivino)
+		rolando.agregarArtefacto(mascaraOscura)
+		hechizoLogos.nombre("alacachula cachicomula")
+		xenia.hechizoPreferido(hechizoLogos)
+		thor.hechizoPreferido(hechizoBasico)
+		loki.hechizoPreferido(hechizoBasico)
+		loki.oro(5)
+	}
+	
+	test "Conocer el nivel de hechiceria de Rolando" {
+		assert.equals(56, rolando.nivelDeHechiceria())
+	}
+	
+	test "Cambiar el nombre del espectro malefico y conocer el nivel de hechiceria de Rolando" {
+		espectroMalefico.nombre("espectro superrecontramalefico muajajaja")
+		assert.equals(125, rolando.nivelDeHechiceria())
+	}
+	
+	test "Cambiar el hechizo preferido y conocer el nivel de hechiceria de Rolando" {
+		rolando.hechizoPreferido(hechizoBasico)
+		assert.equals(35, rolando.nivelDeHechiceria())
+	}
+	
+	test "Hacer que ocurra un eclipse y conocer el nivel de hechiceria de Rolando" {
+		eclipse.inicia()
+		assert.equals(61, rolando.nivelDeHechiceria())
+	}
+	
+	test "Saber si el espectro malefico es poderoso" {
+		assert.that(espectroMalefico.poderoso())
+	}
+	
+	test "Cambiar el nombre del espectro malefico y saber si el espectro malefico es poderoso" {
+		espectroMalefico.nombre("pepe")
+		assert.notThat(espectroMalefico.poderoso())
+	}
+	
+	test "Saber si el hechizo basico es poderoso" {
+		assert.notThat(hechizoBasico.poderoso())
+	}
+	
+	test "Eliminar todos los artefactos y conocer la habilidad para la lucha de Rolando" {	
+		rolando.removerArtefacto(espadaDelDestino)
+		rolando.removerArtefacto(collarDivino)
+		rolando.removerArtefacto(mascaraOscura)
+		assert.equals(1, rolando.habilidadParaLaLucha(rolando))
+	}
+	
+	test "Conocer la habilidad para la lucha de Rolando con todos los artefactos" {
+		assert.equals(13, rolando.habilidadParaLaLucha(rolando))
+	}
+	
+	test "Cambiar la cantidad de perlas del collar divino a 3 y conocer la habilidad para la lucha de Rolando con todos los artefactos" {
+		collarDivino.cantidadDePerlas(3)
+		assert.equals(11, rolando.habilidadParaLaLucha(rolando))
+	}
+	
+	test "Cambiar el valor base para la lucha de Rolando a 8 y conocer la habilidad para la lucha de Rolando con todos los artefactos" {
+		rolando.valorBaseDeLucha(8)
+		assert.equals(20, rolando.habilidadParaLaLucha(rolando))
+	}
+	
+	test "Hacer que ocurra un eclipse. Preguntar por el valor de lucha de la mascara oscura" {
+		eclipse.inicia()
+		assert.equals(5, mascaraOscura.unidadesDeLucha(rolando))
+	}
+	
+	test "Eliminar la máscara oscura de los artefactos de Rolando. Conocer la habilidad para la lucha de Rolando" {
+		rolando.removerArtefacto(mascaraOscura)
+		assert.equals(9, rolando.habilidadParaLaLucha(rolando))
+	}
+	
+	
+	test "Tener una máscara oscura con índice de oscuridad = 0. Preguntar por el valor de lucha de la mascara oscura" {
+		mascaraOscura.indiceDeOscuridad(0)
+		assert.equals(4, mascaraOscura.unidadesDeLucha(rolando))
+	}
+	
+	test "Tener una máscara oscura con índice de oscuridad = 0 y valor mínimo en 2. Preguntar por el valor de lucha de la mascara oscura" {
+		mascaraOscura.indiceDeOscuridad(0)
+		mascaraOscura.unidadesDeLuchaMinimas(2)
+		assert.equals(2, mascaraOscura.unidadesDeLucha(rolando))
+	}
+	
+	test "Saber si Rolando está cargado" {
+		rolando.agregarArtefacto(armadura)
+		rolando.agregarArtefacto(espejo)
+		assert.that(rolando.estaCargado())
+	}
+	
+	test "Hacer que Rolando se saque la armadura, saber si está cargado" {
+		rolando.agregarArtefacto(armadura)
+		rolando.agregarArtefacto(espejo)
+		
+		rolando.removerArtefacto(armadura)
+		assert.notThat(rolando.estaCargado())
+	}
+	
+	test "Saber cuánta habilidad para la lucha tiene Rolando." {
+		rolando.agregarArtefacto(armadura)
+		rolando.agregarArtefacto(espejo)
+		assert.equals(20,rolando.habilidadParaLaLucha(rolando))
+	}
+	
+	test "Saber cuál es la habilidad para la lucha de la armadura de Rolando si tiene una bendición de refuerzo" {
+		rolando.agregarArtefacto(armadura)
+		armadura.refuerzo(bendicion)
+		rolando.agregarArtefacto(espejo)
+		assert.equals(58,armadura.unidadesDeLucha(rolando))
+	}
+	
+	test "Saber cuál es la habilidad para la lucha de la armadura de Rolando si tiene una cota de malla de refuerzo" {
+		rolando.agregarArtefacto(armadura)
+		armadura.refuerzo(cotaDeMalla)
+		rolando.agregarArtefacto(espejo)
+		assert.equals(3,armadura.unidadesDeLucha(rolando))
+	}
+	
+	test "Saber cuál es la habilidad para la lucha de la armadura de Rolando si tiene un hechizo básico de refuerzo" {
+		rolando.agregarArtefacto(armadura)
+		armadura.refuerzo(hechizoBasico)
+		rolando.agregarArtefacto(espejo)
+		assert.equals(12,armadura.unidadesDeLucha(rolando))
+	}
+	
+	test "Saber cuál es la habilidad para la lucha de la armadura de Rolando si tiene un hechizo espectro maléfico de refuerzo" {
+		rolando.agregarArtefacto(armadura)
+		armadura.refuerzo(espectroMalefico)
+		rolando.agregarArtefacto(espejo)
+		assert.equals(19,armadura.unidadesDeLucha(rolando))
+	}
+	
+	
+	test "Eliminar todos los artefactos de Rolando. Incorporar solamente el espejo. Saber cuál es la habilidad para la lucha de Rolando." {
+		rolando.removerArtefacto(espadaDelDestino)
+		rolando.removerArtefacto(collarDivino)
+		rolando.removerArtefacto(mascaraOscura)
+		
+		rolando.agregarArtefacto(espejo)
+		assert.equals(1,rolando.habilidadParaLaLucha(rolando)) /*acá */
+	}
+	
+	test "Reemplazar al hechizo preferido por un libro de hechizos que contenga el Hechizo de Logos (con nombre “espectro maléfico”) y al hechizo básico. Saber cuál es el nivel de hechicería de Rolando." {
+		libroDeHechizos.agregarHechizo(espectroMalefico)
+		libroDeHechizos.agregarHechizo(hechizoBasico)
+		
+		rolando.hechizoPreferido(libroDeHechizos)
+		assert.equals(56,rolando.nivelDeHechiceria())
+	}
+	
+	test "Agregarle a Rolando una armadura extra, cuyo valor base es 5, con un refuerzo Cota de Malla que tiene un valor de lucha 6. Saber cuál es la habilidad para la lucha de Rolando." {
+		rolando.agregarArtefacto(armadura)
+		rolando.agregarArtefacto(espejo)
+		
+		armadura2.valorBase(5)
+		cotaDeMalla2.valorDeLucha(6)
+		armadura2.refuerzo(cotaDeMalla2)
+		rolando.agregarArtefacto(armadura2)
+		assert.equals(37,rolando.habilidadParaLaLucha(rolando))
+	}
+	
+	test "Conocer el precio de lista de un hechizo de logo cuyo nombre es alacachula cachicomula" {
+		assert.equals(22,hechizoLogos.precio(armadura,xenia))
+	}
+	
+	test "Xenia canjea el hechizo por un hechizo básico." { 
+		xenia.comprarHechizo(hechizoBasico,armadura)
+		assert.equals(100,xenia.oro())
+	}
+	
+	test "Thor canjea el hechizo por un hechizo de Logos." {
+		thor.comprarHechizo(hechizoLogos,armadura)
+		assert.equals(83,thor.oro())
+	}
+	
+	test "Hacer canjear dos veces a Thor el mismo hechizo básico." {
+		thor.comprarHechizo(hechizoBasico,armadura)
+		thor.comprarHechizo(hechizoBasico,armadura)
+		assert.equals(90,thor.oro())
+	}
+	
+	/*Me Falta chequear que loki no puede comprar el hechizo alaca... */
+	
+	test "Xenia compra una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5. Cuántas monedas le quedan a Xenia." {
+		xenia.comprarArtefacto(espadaDelDestino)
+		xenia.comprarArtefacto(collarDivino)
+		xenia.comprarArtefacto(armadura)
+		cotaDeMalla2.valorDeLucha(5)
+		armadura2.refuerzo(cotaDeMalla2)
+		xenia.comprarArtefacto(armadura2)
+		assert.equals(70.5,xenia.oro())
+	}
+	
+	test "Xenia compra una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5. Cuántos artefactos tiene Xenia." {
+		xenia.comprarArtefacto(espadaDelDestino)
+		xenia.comprarArtefacto(collarDivino)
+		xenia.comprarArtefacto(armadura)
+		armadura2.refuerzo(cotaDeMalla2)
+		xenia.comprarArtefacto(armadura2)
+		assert.equals(4,xenia.cantidadDeArtefactos())
+	}
+	
+	test "Thor compra una armadura con bendición como refuerzo, y una armadura reforzada con el hechizo alacachula (del juego de datos). Cuántas monedas le quedan a Thor" {
+		armadura.refuerzo(bendicion)
+		thor.comprarArtefacto(armadura)
+		armadura2.refuerzo(hechizoLogos)
+		thor.comprarArtefacto(armadura2)
+		assert.equals(74,thor.oro())
+	}
+	
+	/*Falta hacer Loki quiere comprar un espejo */
+	
+	test "Xenia compra un libro de hechizos que contiene el hechizo de logos de nombre “alacachula cachicomula” y el hechizo básico. Cuántas monedas le quedan a Xenia." {
+		libroDeHechizos.agregarHechizo(hechizoLogos)
+		libroDeHechizos.agregarHechizo(hechizoBasico)
+		xenia.comprarArtefacto(libroDeHechizos)
+		assert.equals(58,xenia.oro())
+	}
+}

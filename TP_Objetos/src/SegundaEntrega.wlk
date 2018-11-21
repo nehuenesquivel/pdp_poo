@@ -17,7 +17,7 @@ class Personaje {
 
 	method habilidadParaLaLucha(personaje) = valorBaseDeLucha + self.unidadesDeLucha(personaje)
 	
-	method unidadesDeLucha(personaje) = artefactos.map({artefacto => artefacto.unidadesDeLucha(self)}).sum()
+	method unidadesDeLucha(personaje) = artefactos.fold(0,{acum, artefacto =>acum + artefacto.unidadesDeLucha(personaje)})
 
 	method agregarArtefacto(_artefacto) {
 		artefactos.add(_artefacto)
@@ -30,7 +30,7 @@ class Personaje {
 	method mayorHabilidadParaLaLucha(personaje) = self.habilidadParaLaLucha(personaje) > self.nivelDeHechiceria()
 	
 		
-	method mejorArtefacto(personaje) = artefactos.sortedBy({artefacto1, artefacto2 => artefacto1.unidadesDeLucha(personaje) > artefacto2.unidadesDeLucha(personaje)}).head()
+	method mejorArtefacto(personaje) = artefactos.filter({ _artefacto => !_artefacto.esEspejo() }).sortedBy({ _artefacto1 , _artefacto2 => _artefacto1.unidadesDeLucha(personaje) > _artefacto2.unidadesDeLucha(personaje) }).head()
 	
 	
 	method estaCargado() = artefactos.size() >= 5
@@ -84,11 +84,9 @@ class HechizoLogos inherits Hechizo {
 	var property nombre = "Hechizo Logos"
 	var property multiploPoder = 1
 
-	override method poder() = nombre.size() * (self.multiploPoder())
+	override method poder() = nombre.size() * self.multiploPoder()
 	override method poderoso() = self.poder() > 15
-	method multiploPoder(_multiploPoder) {
-		multiploPoder = _multiploPoder
-	}
+	
 	method precio(armadura,personaje) = self.poder()
 }
 
@@ -111,6 +109,7 @@ object eclipse {
 class Artefacto {
 	method precio(personaje)
 	method unidadesDeLucha(personaje)
+	method esEspejo() = false
 }
 
 class Espada inherits Artefacto {
@@ -147,14 +146,16 @@ class Espejo inherits Artefacto {
 		}
 	} 
 	override method precio(personaje) = 90
+	override method esEspejo() = true
 }
 
 
 class Armadura inherits Artefacto {
-	var  property refuerzo = ninguno
+	var property refuerzo = ninguno
+	var property valorBase = 2
 	
-	override method unidadesDeLucha(personaje) = 2 + refuerzo.valor(personaje)
-	override method precio(personaje) = refuerzo.precio(self, personaje)
+	override method unidadesDeLucha(personaje) = valorBase + refuerzo.valor(personaje)
+	override method precio(personaje) = 2 + refuerzo.precio(self, personaje)
 }
 
 class Refuerzo {
@@ -163,13 +164,15 @@ class Refuerzo {
 }
 
 class CotaDeMalla inherits Refuerzo {
-	override method valor(personaje) = 1
+	var property valorDeLucha = 1
+	
+	override method valor(personaje) = valorDeLucha	
 	override method precio(armadura, personaje) = armadura.unidadesDeLucha(personaje) / 2 
 }
 
 class Bendicion inherits Refuerzo {
 	override method valor(personaje) = personaje.nivelDeHechiceria()
-	override method precio(armadura, personaje) = 2
+	override method precio(armadura, personaje) = 0
 }
 
 object ninguno inherits Refuerzo {
