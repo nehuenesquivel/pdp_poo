@@ -49,6 +49,8 @@ class Personaje {
 			oro = oro - _artefacto.precio(self)
 			_artefacto.fechaDeCompra(new Date())
 			artefactos.add(_artefacto)
+		} else {
+			throw new Exception("No tiene oro suficiente")
 		}
 	}
 	
@@ -58,6 +60,8 @@ class Personaje {
 		if(self.calcularCostoHechizo(_hechizo,_artefacto) <= oro) {
 			oro = oro - self.calcularCostoHechizo(_hechizo,_artefacto)
 			hechizoPreferido = _hechizo
+		} else {
+			throw new Exception("No tiene oro suficiente")
 		}
 	}
 }
