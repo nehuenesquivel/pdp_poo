@@ -204,7 +204,9 @@ describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
 		assert.equals(90,thor.oro())
 	}
 	
-	/*Me Falta chequear que loki no puede comprar el hechizo alaca... */
+	test "Loki comienza con 5 monedas. Quiere canjear el hechizo por el de alacachula cachicomula del juego de datos." {
+		assert.throwsExceptionWithMessage("No tiene oro suficiente",{loki.comprarHechizo(hechizoLogos,armadura)})
+	}
 	
 	test "Xenia compra una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5. Cuántas monedas le quedan a Xenia." {
 		xenia.comprarArtefacto(espadaDelDestino)
@@ -233,7 +235,9 @@ describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
 		assert.equals(74,thor.oro())
 	}
 	
-	/*Falta hacer Loki quiere comprar un espejo */
+	test "Loki quiere comprar un espejo." {
+		assert.throwsExceptionWithMessage("No tiene oro suficiente",{loki.comprarArtefacto(espejo)})
+	}
 	
 	test "Xenia compra un libro de hechizos que contiene el hechizo de logos de nombre “alacachula cachicomula” y el hechizo básico. Cuántas monedas le quedan a Xenia." {
 		libroDeHechizos.agregarHechizo(hechizoLogos)
