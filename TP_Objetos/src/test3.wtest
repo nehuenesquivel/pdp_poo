@@ -1,6 +1,41 @@
-/*import TerceraEntrega.* */
+import TerceraEntrega.* 
 
-describe "Tests Primera Entrega" {
+describe "Tests" {
+	const rolando = new Personaje()
+	const xenia = new Personaje()
+	const thor = new Personaje()
+	const loki = new Personaje()
+	const furibunda = new Personaje ()
+	const hechizoEspecial = new HechizoEspecial()
+	const hechizoBasico = new HechizoBasico()
+	const hechizoLogos = new HechizoLogos()
+	const hechizoMalefico = new HechizoLogos()
+	const espadaDelDestino = new Espada()
+	const collarDivino = new CollarDivino()
+	const mascaraOscura = new Mascara()
+	const armadura = new Armadura()
+	const armadura2 = new Armadura()
+	const espejo = new Espejo()
+	const bendicion = new Bendicion()
+	const cotaDeMalla = new CotaDeMalla()
+	const cotaDeMalla2 = new CotaDeMalla()
+	
+	fixture {
+		rolando.hechizoPreferido(hechizoEspecial)
+		collarDivino.cantidadDePerlas(5)
+		mascaraOscura.indiceDeOscuridad(1)
+		rolando.agregarArtefacto(espadaDelDestino)
+		rolando.agregarArtefacto(collarDivino)
+		rolando.agregarArtefacto(mascaraOscura)
+		hechizoLogos.nombre("alacachula cachicomula")
+		xenia.hechizoPreferido(hechizoLogos)
+		thor.hechizoPreferido(hechizoBasico)
+		loki.hechizoPreferido(hechizoBasico)
+		furibunda.hechizoPreferido(hechizoComercial)
+		loki.oro(5)
+	}	
+
+/* Test Primera Entrega */
 
 	test "Conocer el nivel de hechiceria de Rolando" {
 		rolando.hechizoPreferido(hechizoEspecial)
@@ -190,9 +225,9 @@ describe "Tests Primera Entrega" {
 		rolando.hechizoPreferido(libroDeHechizos)
 		assert.equals(56, rolando.nivelDeHechiceria())
 	}
-}
 	
-describe "Tests Entrega 2"{
+	
+/* Test Segunda Entrega */
 		
 	test "Conocer el precio de lista de un hechizo de logo cuyo nombre es alacachula cachicomula" {
 		assert.equals(22,hechizoLogos.precio(armadura,xenia))
@@ -214,7 +249,10 @@ describe "Tests Entrega 2"{
 		assert.equals(90,thor.oro())
 	}
 	
-	/*Me Falta chequear que loki no puede comprar el hechizo alaca... */
+	test "Loki comienza con 5 monedas. Quiere canjear el hechizo por el de alacachula cachicomula del juego de datos." {
+		assert.throwsExceptionWithMessage("No tiene oro suficiente",{loki.comprarHechizo(hechizoLogos,armadura)})
+	}
+	
 	
 	test "Xenia compra a Mock Hnos. una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5" {
 		/*ver que se hace aca */	
@@ -234,9 +272,127 @@ describe "Tests Entrega 2"{
 		assert.equals(74,thor.oro())
 	}
 	
-	/*Falta hacer Loki quiere comprar un espejo */
+	test "Loki quiere comprar un espejo." {
+		assert.throwsExceptionWithMessage("No tiene oro suficiente",{loki.comprarArtefacto(espejo)})
+	}
 	
+	test "Xenia compra un libro de hechizos que contiene el hechizo de logos de nombre “alacachula cachicomula” y el hechizo básico. Cuántas monedas le quedan a Xenia." {
+		libroDeHechizos.agregarHechizo(hechizoLogos)
+		libroDeHechizos.agregarHechizo(hechizoBasico)
+		xenia.comprarArtefacto(libroDeHechizos)
+		assert.equals(58,xenia.oro())
+	}	
+
+
+/* Test Tercera Entrega */
 	
+	test "Saber el nivel de hechicería de Furibunda" {
+		assert.equals(29, furibunda.nivelDeHechiceria())
+	}
+	
+	test "Saber si el hechizo comercial es poderoso" {
+		assert.equals(false,hechizoComercial.poderoso())
+	}
+	
+	test "Saber si el espectro maléfico es poderoso" {
+		assert.equals (true, hechizoMalefico.poderoso())	
+	}	
+	
+	test "Saber el peso de la espada vieja" {
+		/*hacerlo */
+	}
+	
+	test "Saber el peso de la espada nueva" {
+		/* hacerlo */
+	}
+	
+	test "Saber el peso de la espada común" {
+		/* hacerlo */
+	}
+	
+	test "Saber el peso del collar divino" {
+		/* hacerlo */
+	}
+	
+	test "Saber el peso de la máscara oscura" {
+		/* hacerlo */
+	}
+	
+	test "Hacer que ocurra un eclipse. Luego saber el peso de la máscara oscura" {
+		/* hacerlo */
+	}
+	
+	test "Saber el peso de la máscara clara" {
+		/* hacerlo */
+	}
+	
+	test "Saber cuál es el peso total de la armadura con cota de malla" {
+		/* hacerlo */
+	}
+	
+	test "Saber cuál es el peso total de la armadura con hechizo par" {
+		/* hacerlo */
+	}
+	
+	test "Saber cuál es el peso total de la armadura con hechizo impar" {
+		/* hacerlo */
+	}
+	
+	test "Saber cuál es el peso total de la armadura sin ningún tipo de refuerzo" {
+		/* hacerlo */
+	}
+	
+	test "Merlin le compra a Mock Hnos. la máscara clara y la oscura (sin que haya eclipse). Calcular cuál es el peso total que carga Merlin" {
+		/* hacerlo */
+	}
+	
+	test "Merlin le quiere comprar a Mock Hnos. la armadura con hechizo par" {
+		/*hacerlo */
+	}
+	
+	test "Ursula carga con 14 kilos iniciales (11 de la armadura con cota de malla y 3 de la máscara oscura). Decide desprenderse de la armadura con cota de malla. Calcular cuál es el peso total con el que carga Ursula ahora" {
+		/* hacerlo */
+	}
+	
+	test "Conocer la habilidad para la lucha de navi" {
+		/*hacerlo */
+	}
+	
+	test "Conocer la habilidad para la lucha de Ashley Graham" {
+		/* hacerlo */
+	} 
+	
+	test "Hacer que Ashley Graham tenga dificultad difícil. Conocer la habilidad para la lucha de Ashley Graham" {
+		/* hacerlo */
+	}
+	
+	test "Ursula comienza con 100 monedas.Luego compra la máscara oscura a Pastoriza" {
+		/* hacerlo */
+	}
+	
+	test "Ursula comienza con 100 monedas. Luego compra la máscara oscura a Prieto" {
+		/* hacerlo */
+	}
+	
+	test "Ursula comienza con 100 monedas.Luego compra la máscara oscura a Fermepin" {
+		/* hacerlo */
+	}
+	
+	test "Recategorizar a Pastoriza.Hacer que Ursula le compre la máscara oscura a Pastoriza" {
+		 /* hacerlo */
+	}
+	
+	test "Recategorizar dos veces a Pastoriza.Hacer que Ursula le compre la máscara oscura a Pastoriza" {
+		/* hacerlo */
+	}
+	
+	test "Recategorizar a Prieto.Hacer que Ursula le compre la máscara oscura a Prieto" {
+		/* hacerlo */
+	}
+	
+	test "Recategorizar a Fermepin. Hacer que Ursula le compre la máscara oscura a Fermepin" {
+		/* hacerlo */
+	}
 	
 	
 }
