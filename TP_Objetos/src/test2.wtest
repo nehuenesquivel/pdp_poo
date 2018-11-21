@@ -1,4 +1,4 @@
-import example.*
+import SegundaEntrega.*
 
 describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
 	const rolando = new Personaje()
