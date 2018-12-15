@@ -159,7 +159,7 @@ class Armadura inherits Artefacto {
 	var property valorBase = 2
 	
 	override method unidadesDeLucha(personaje) = valorBase + refuerzo.valor(personaje)
-	override method precio(personaje) = 2 + refuerzo.precio(self, personaje)
+	override method precio(personaje) = valorBase + refuerzo.precio(self, personaje)
 }
 
 class Refuerzo {
@@ -171,7 +171,8 @@ class CotaDeMalla inherits Refuerzo {
 	var property valorDeLucha = 1
 	
 	override method valor(personaje) = valorDeLucha	
-	override method precio(armadura, personaje) = armadura.unidadesDeLucha(personaje) / 2 
+	//override method precio(armadura, personaje) = armadura.unidadesDeLucha(personaje) / 2 
+	override method precio(armadura, personaje) = (valorDeLucha / 2) - armadura.valorBase()
 }
 
 class Bendicion inherits Refuerzo {

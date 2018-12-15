@@ -209,12 +209,12 @@ describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
 	}
 	
 	test "Xenia compra una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5. Cuántas monedas le quedan a Xenia." {
-		xenia.comprarArtefacto(espadaDelDestino)
-		xenia.comprarArtefacto(collarDivino)
-		xenia.comprarArtefacto(armadura)
+		xenia.comprarArtefacto(espadaDelDestino) //15
+		xenia.comprarArtefacto(collarDivino) //10
+		xenia.comprarArtefacto(armadura) //2
 		cotaDeMalla2.valorDeLucha(5)
-		armadura2.refuerzo(cotaDeMalla2)
-		xenia.comprarArtefacto(armadura2)
+		armadura2.refuerzo(cotaDeMalla2) 
+		xenia.comprarArtefacto(armadura2) //2.5
 		assert.equals(70.5,xenia.oro())
 	}
 	
