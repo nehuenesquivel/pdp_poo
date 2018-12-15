@@ -3,6 +3,10 @@ object rolando {
 	var hechizoPreferido
 	var valorBaseDeLucha = 1
 	var artefactos = []
+	
+	method artefactos() {
+		return artefactos
+	}
 
 	method nivelDeHechiceria() = valorBaseDeHechiceria * hechizoPreferido.poder() + fuerzaOscura.valor()
 
@@ -16,7 +20,8 @@ object rolando {
 
 	method habilidadParaLaLucha() = valorBaseDeLucha + self.unidadesDeLucha()
 	
-	method unidadesDeLucha() = artefactos.map({artefacto => artefacto.unidadesDeLucha()}).sum()
+	//method unidadesDeLucha() = artefactos.map({artefacto => artefacto.unidadesDeLucha()}).sum()
+	method unidadesDeLucha() = artefactos.fold(0,{acum, artefacto =>acum + artefacto.unidadesDeLucha()})
 
 	method valorBaseDeLucha(_valorBaseDeLucha) {
 		valorBaseDeLucha = _valorBaseDeLucha
@@ -32,9 +37,10 @@ object rolando {
 
 	method mayorHabilidadParaLaLucha() = self.habilidadParaLaLucha() > self.nivelDeHechiceria()
 	
-	method mejorArtefacto() = artefactos.sortedBy({artefacto1, artefacto2 => artefacto1.unidadesDeLucha() > artefacto2.unidadesDeLucha()}).head()
+	//method mejorArtefacto() = artefactos.sortedBy({artefacto1, artefacto2 => artefacto1.unidadesDeLucha() > artefacto2.unidadesDeLucha()}).head()
+	method mejorArtefacto() = artefactos.filter({ _artefacto => !_artefacto.esEspejo() }).sortedBy({ _artefacto1 , _artefacto2 => _artefacto1.unidadesDeLucha() > _artefacto2.unidadesDeLucha() }).head()
 	
-	method estaCargado() = artefactos.length() >= 5
+	method estaCargado() = artefactos.size() >= 5
 }
 
 class Hechizo {
@@ -85,6 +91,7 @@ object eclipse {
 
 class Artefacto {
 	method unidadesDeLucha()
+	method esEspejo() = false
 }
 
 object espadaDelDestino inherits Artefacto {
@@ -134,19 +141,29 @@ object ninguno inherits Refuerzo {
 }
 
 object espejo inherits Artefacto {
-	override method unidadesDeLucha() = rolando.mejorArtefacto().unidadesDeLucha()
+	override method unidadesDeLucha() {
+		if (rolando.artefactos().size() == 1) {
+			return 0
+		} else {
+			return rolando.mejorArtefacto().unidadesDeLucha()
+		}
+	}
+	//override method unidadesDeLucha() = rolando.mejorArtefacto().unidadesDeLucha()
+	
+	override method esEspejo() = true
 }
 
 object libroDeHechizos inherits Hechizo {
 	var hechizos = []
 	
 	method agregarHechizo(_hechizo) {
-		hechizos += _hechizo
+		hechizos.add( _hechizo)
 	}
 	
 	method hechizosPoderosos() = hechizos.filter({hechizo => hechizo.poderoso()})
 	
-	override method poder() = self.hechizosPoderosos().poder().sum()
+	//override method poder() = self.hechizosPoderosos().poder().sum()
+	override method poder() = self.hechizosPoderosos().sum({hechizo => hechizo.poder()})
 
 	override method poderoso() = self.hechizosPoderosos().length() > 0
 	

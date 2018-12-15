@@ -123,16 +123,18 @@ describe "Tests de Hechiceria, Lucha y Lucha Avanzada" {
 	}
 	
 	test "Saber cuánta habilidad para la lucha tiene Rolando" {
-		rolando.agregarArtefacto(espadaDelDestino)
-		rolando.agregarArtefacto(collarDivino)
-		rolando.agregarArtefacto(mascaraOscura)
-		rolando.agregarArtefacto(armadura)
-		rolando.agregarArtefacto(espejo)
+		rolando.agregarArtefacto(espadaDelDestino) 
+		collarDivino.cantidadDePerlas(5)
+		rolando.agregarArtefacto(collarDivino) 
+		rolando.agregarArtefacto(mascaraOscura) 
+		rolando.agregarArtefacto(armadura) 
+		rolando.agregarArtefacto(espejo) 
 		
 		assert.equals(20, rolando.habilidadParaLaLucha())
 	}
 	
 	test "Saber cuál es la habilidad para la lucha de la armadura de Rolando si tiene una bendición de refuerzo" {
+		rolando.hechizoPreferido(hechizoEspecial)
 		rolando.agregarArtefacto(espadaDelDestino)
 		rolando.agregarArtefacto(collarDivino)
 		rolando.agregarArtefacto(mascaraOscura)
