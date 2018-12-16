@@ -22,7 +22,7 @@ class Personaje {
 
 	method habilidadParaLaLucha(personaje) = valorBaseDeLucha + self.unidadesDeLucha(personaje)
 	
-	method unidadesDeLucha(personaje) = artefactos.map({artefacto => artefacto.unidadesDeLucha(self)}).sum()
+	method unidadesDeLucha(personaje) = artefactos.fold(0,{acum, artefacto =>acum + artefacto.unidadesDeLucha(personaje)})
 
 	method agregarArtefacto(_artefacto) {
 		artefactos.add(_artefacto)
@@ -77,12 +77,24 @@ class Hechizo {
 	method valor(personaje) = self.poder()
 	
 	method peso() {
-		if (self.poder().isOdd()){
+		if (self.poderPar()){
 			return 2
 		} else {
 			return 1
 		}
 	}
+	
+	method poderPar() {
+		return (self.poder()%2) == 0
+	} 
+}
+
+class HechizoPar inherits Hechizo {
+	override method peso() = 2
+}
+
+class HechizoImpar inherits Hechizo {
+	override method peso() = 1
 }
 
 class HechizoEspecial inherits Hechizo {
@@ -188,8 +200,9 @@ class Espejo inherits Artefacto {
 
 class Armadura inherits Artefacto {
 	var  property refuerzo = ninguno
+	var property valorBase = 2
 	
-	override method unidadesDeLucha(personaje) = 2 + refuerzo.valor(personaje)
+	override method unidadesDeLucha(personaje) = valorBase + refuerzo.valor(personaje)
 	override method precio(personaje) = refuerzo.precio(self, personaje)
 	override method pesoTotal(personaje) {
 		return super(personaje) + self.refuerzo().peso()
