@@ -55,11 +55,11 @@ class Personaje {
 		}
 	}
 	
-	method calcularCostoHechizo(_hechizo, _comerciante) = (_comerciante.precioHechizo(_hechizo, self) - (hechizoPreferido.precio()/2)).max(0)
+	method calcularCostoHechizo(_hechizo,_artefacto, _comerciante) = (_comerciante.precioHechizo(_hechizo,_artefacto, self) - (hechizoPreferido.precio(_artefacto,_hechizo)/2)).max(0)
 	
-	method comprarHechizo(_hechizo, _comerciante) {
-		if(self.calcularCostoHechizo(_hechizo, _comerciante) <= oro) {
-			oro = oro - self.calcularCostoHechizo(_hechizo, _comerciante)
+	method comprarHechizo(_hechizo,_artefacto, _comerciante) {
+		if(self.calcularCostoHechizo(_hechizo,_artefacto, _comerciante) <= oro) {
+			oro = oro - self.calcularCostoHechizo(_hechizo,_artefacto, _comerciante)
 			hechizoPreferido = _hechizo
 		} else {
 			throw new Exception("No tiene oro suficiente")
@@ -72,7 +72,7 @@ class Comerciante {
 	var property comision = 0
 	
 	method precioArtefacto(_artefacto, personaje) = _artefacto.precio(personaje) + tipo.costoAdicionalArtefacto(_artefacto, personaje, comision)
-	method precioHechizo(_hechizo, personaje) = _hechizo.precio() + tipo.costoAdicionalHechizo(_hechizo, personaje, comision)
+	method precioHechizo(_hechizo,_artefacto ,personaje) = _hechizo.precio(_artefacto,_hechizo) + tipo.costoAdicionalHechizo(_hechizo,_artefacto ,personaje, comision)
 }
 
 object independiente {
@@ -81,7 +81,7 @@ object independiente {
 }
 object registrado {
 	method costoAdicionalArtefacto(_artefacto, personaje, comision)	= _artefacto.precio(personaje)*0.21
-	method costoAdicionalHechizo(_hechizo, personaje, comision)	= _hechizo.precio()*0.21
+	method costoAdicionalHechizo(_hechizo,_artefacto, personaje, comision)	= _hechizo.precio(_artefacto,_hechizo)*0.21
 }
 object ganancias {
 	const property minimoNoImponible = 0
@@ -124,7 +124,7 @@ class Hechizo {
 		return (self.poder()%2) == 0
 	} 
 	
-	method precio() = self.poder()
+	method precio(_artefacto,_hechizo) = self.poder()
 }
 
 class HechizoEspecial inherits Hechizo {
@@ -192,7 +192,7 @@ class Artefacto {
 	var property fechaDeCompra = new Date()
 	
 	method pesoTotal(personaje) = peso - self.factorDeCorreccion()
-	method factorDeCorreccion() = 1.min((new Date()-fechaDeCompra)/1000)
+	method factorDeCorreccion() = 1.min((new Date()- fechaDeCompra)/1000)
 	method precio(personaje)
 	method unidadesDeLucha(personaje)
 	method esEspejo() = false
