@@ -77,11 +77,11 @@ describe "Tests" {
 		merlin.pesoMaximo(10)
 		ursula.agregarArtefacto(mascaraOscura2)
 		ursula.agregarArtefacto(armadura3)
-		espadaDelDestino.peso(10)
-		collarDivino.peso(10)
-		armadura.peso(10)
-		armadura2.peso(10)
-		libroDeHechizos.peso(10)
+		espadaDelDestino.peso(0)
+		collarDivino.peso(0)
+		armadura.peso(0)
+		armadura2.peso(0)
+		libroDeHechizos.peso(0)
 		navi.nivel(facil)
 		ashleyGraham.nivel(moderado)
 		ashleyGraham.valorBaseDeLucha(5)
@@ -261,12 +261,12 @@ describe "Tests" {
 	}
 	
 	test "Xenia compra a Mock Hnos una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5. Cuántas monedas le quedan a Xenia." {
-		xenia.comprarArtefacto(espadaDelDestino, mockHnos) 
+		xenia.comprarArtefacto(espadaDelDestino, mockHnos)
 		xenia.comprarArtefacto(collarDivino, mockHnos) 
 		xenia.comprarArtefacto(armadura, mockHnos) 
 		cotaDeMalla2.valorDeLucha(5)
 		armadura2.refuerzo(cotaDeMalla2) 
-		xenia.comprarArtefacto(armadura2, mockHnos) 
+		xenia.comprarArtefacto(armadura2, mockHnos)
 		assert.equals(85.5,xenia.oro())
 	}
 	
@@ -315,7 +315,7 @@ describe "Tests" {
 	}	
 	
 	test "Saber el peso de la espada vieja" {
-		assert.equals(6,espadaVieja.pesoTotal())
+		assert.equals(6,espadaVieja.peso())
 	}
 	
 	test "Saber el peso de la espada nueva" {
