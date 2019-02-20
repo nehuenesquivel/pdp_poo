@@ -184,10 +184,10 @@ object eclipse {
 
 class Artefacto {
 	var property peso
-	var property fechaDeCompra = new Date()
+	var property fechaDeCompra 
 	
 	method pesoTotal() = peso - self.factorDeCorreccion()
-	method factorDeCorreccion() = 1.min((new Date()- fechaDeCompra)/1000)
+	method factorDeCorreccion() = 1.min((new Date()- fechaDeCompra)/100)
 	method precio()
 	method unidadesDeLucha(personaje)
 	method esEspejo() = false
@@ -211,13 +211,13 @@ class CollarDivino inherits Artefacto {
 
 class Mascara inherits Artefacto {
 	var property unidadesDeLuchaMinimas = 4
-	var property indiceDeOscuridad = 0
-	var property personaje = new Personaje()
-	
-	override method unidadesDeLucha(personaje2) = unidadesDeLuchaMinimas.max(fuerzaOscura.dividida() * indiceDeOscuridad)
+	var property indiceDeOscuridad = 1
+	var property personaje
+	method valorDeLucha(personaje2) = fuerzaOscura.dividida() * indiceDeOscuridad
+	override method unidadesDeLucha(personaje2) = unidadesDeLuchaMinimas.max(self.valorDeLucha(personaje2))
 	override method precio() = 10 * indiceDeOscuridad
 	override method pesoTotal() {
-		if (self.unidadesDeLucha(personaje)>3) {
+		if (self.valorDeLucha(personaje)>3 and indiceDeOscuridad != 0) {
 			return super() + self.unidadesDeLucha(personaje) - 3
 		} else {
 			return super()
