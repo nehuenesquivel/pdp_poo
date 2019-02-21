@@ -64,21 +64,38 @@ class Personaje {
 }
 
 class Comerciante {
-	var property tipo = registrado
+	var property tipo = independiente
 	var property comision = 0
 	
-	method precioArtefacto(_artefacto, personaje) = _artefacto.precio() + tipo.costoAdicionalArtefacto(_artefacto, personaje, comision)
-	method precioHechizo(_hechizo,_artefacto ,personaje) = _hechizo.precio(_artefacto) + tipo.costoAdicionalHechizo(_hechizo,_artefacto ,personaje, comision)
+	method precioArtefacto(_artefacto, personaje) = _artefacto.precio() + tipo.costoAdicionalArtefacto(_artefacto, personaje,self.comision())
+	method precioHechizo(_hechizo,_artefacto, personaje) = _hechizo.precio(_artefacto) + tipo.costoAdicionalHechizo(_hechizo,_artefacto ,personaje,self.comision())
+	method recategorizar() {
+		if (tipo == registrado){
+			tipo = ganancias
+		} else if (tipo == independiente){
+			if (self.noSupera21Porciento(comision*2)) {
+					self.comision(comision*2)
+			} else {
+				tipo = registrado
+			}
+		}	
+	}
+	
+	method noSupera21Porciento(_comision) {
+		return (_comision <= 0.21)
+	}
 }
 
 object independiente {
 	method costoAdicionalArtefacto(_artefacto, personaje, comision)	= comision
-	method costoAdicionalHechizo(_hechizo, personaje, comision)	= comision
+	method costoAdicionalHechizo(_hechizo, _artefacto, personaje, comision)	= comision
 }
+
 object registrado {
 	method costoAdicionalArtefacto(_artefacto, personaje, comision)	= _artefacto.precio()*0.21
-	method costoAdicionalHechizo(_hechizo,_artefacto, personaje, comision)	= _hechizo.precio(_artefacto)*0.21
+	method costoAdicionalHechizo(_hechizo, _artefacto, personaje, comision)	= _hechizo.precio(_artefacto)*0.21
 }
+
 object ganancias {
 	var property minimoNoImponible = 0
 	
@@ -89,7 +106,7 @@ object ganancias {
 			return 0
 		}
 	}
-	method costoAdicionalHechizo(_hechizo, personaje, comision)	{
+	method costoAdicionalHechizo(_hechizo, _artefacto , personaje, comision)	{
 		if (_hechizo.precio() > minimoNoImponible) {
 			return (minimoNoImponible - _hechizo.precio()) * 0.35
 		} else {
@@ -244,7 +261,7 @@ class Armadura inherits Artefacto {
 	var property valorBase = 2
 	
 	override method unidadesDeLucha(personaje) = valorBase + refuerzo.valor(personaje)
-	override method precio() = refuerzo.precio(self)
+	override method precio() = refuerzo.precio()
 	override method pesoTotal() {
 		return super() + self.refuerzo().peso()
 	}
@@ -253,26 +270,27 @@ class Armadura inherits Artefacto {
 class Refuerzo {
 	method peso() = 0
 	method valor(personaje)
-	method precio(armadura)
+	method precio()
 }
 
 class CotaDeMalla inherits Refuerzo {
 	var property valorDeLucha = 1
 	var property peso = 1
+	var property armadura = new Armadura()
 	
 	override method peso() = peso
 	override method valor(personaje) = 1
-	override method precio(armadura) = (valorDeLucha / 2) - armadura.valorBase() 
+	override method precio() = (valorDeLucha / 2) - armadura.valorBase() 
 }
 
 class Bendicion inherits Refuerzo {
 	override method valor(personaje) = personaje.nivelDeHechiceria()
-	override method precio(armadura) = 2
+	override method precio() = 2
 }
 
 object ninguno inherits Refuerzo {
 	override method valor(personaje) = 0
-	override method precio(armadura) = 0
+	override method precio() = 0
 }
 
 object libroDeHechizos inherits Hechizo {

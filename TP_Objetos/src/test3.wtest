@@ -42,6 +42,7 @@ describe "Tests" {
 	const fermepin = new Comerciante()
 	const hoy = new Date()
 	const fechaEspadaVieja = new Date(07,05,2006)
+
 	
 	fixture {
 		rolando.hechizoPreferido(espectroMalefico)
@@ -97,7 +98,8 @@ describe "Tests" {
 		ashleyGraham.valorBaseDeLucha(5)
 		ashleyGraham.agregarArtefacto(mascaraClara)
 		pastoriza.tipo(independiente)
-		independiente.costoAdicionalArtefacto(mascaraOscura2,ursula,9)
+		pastoriza.comision(0.9)
+		independiente.costoAdicionalArtefacto(mascaraOscura2,ursula,pastoriza.comision())
 		prieto.tipo(registrado)
 		fermepin.tipo(ganancias)
 		ganancias.minimoNoImponible(5)
@@ -416,21 +418,34 @@ describe "Tests" {
 		 assert.equals(88.25,ursula.oro()) 
 	}
 	
-	/*test "Recategorizar a Pastoriza.Hacer que Ursula le compre la máscara oscura a Pastoriza" {
-		  hacerlo 
+	test "Recategorizar a Pastoriza.Hacer que Ursula le compre la máscara oscura a Pastoriza" {
+		ursula.oro(100)
+		ursula.comprarArtefacto(mascaraOscura2,pastoriza)
+		pastoriza.recategorizar()
+		assert.equals(88.2,ursula.oro())  
 	}
 	
 	test "Recategorizar dos veces a Pastoriza.Hacer que Ursula le compre la máscara oscura a Pastoriza" {
-		 hacerlo 
+		ursula.oro(100)
+		ursula.comprarArtefacto(mascaraOscura2,pastoriza)
+		pastoriza.recategorizar()
+		pastoriza.recategorizar()
+		assert.equals(87.9,ursula.oro())
 	}
 	
 	test "Recategorizar a Prieto.Hacer que Ursula le compre la máscara oscura a Prieto" {
-		hacerlo 
+		ursula.oro(100)
+		ursula.comprarArtefacto(mascaraOscura2,prieto)
+		prieto.recategorizar()
+		assert.equals(88.25,ursula.oro())
 	}
 	
 	test "Recategorizar a Fermepin. Hacer que Ursula le compre la máscara oscura a Fermepin" {
-		 hacerlo 
+		ursula.oro(100)
+		ursula.comprarArtefacto(mascaraOscura2,fermepin)
+		fermepin.recategorizar()
+		assert.equals(88.25,ursula.oro()) 
 	}
-*/	
+	
 	
 }
