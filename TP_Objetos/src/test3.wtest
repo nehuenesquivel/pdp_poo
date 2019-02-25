@@ -98,11 +98,12 @@ describe "Tests" {
 		ashleyGraham.valorBaseDeLucha(5)
 		ashleyGraham.agregarArtefacto(mascaraClara)
 		pastoriza.tipo(independiente)
-		pastoriza.comision(0.9)
+		pastoriza.comision(0.09)
 		independiente.costoAdicionalArtefacto(mascaraOscura2,ursula,pastoriza.comision())
 		prieto.tipo(registrado)
-		fermepin.tipo(ganancias)
 		ganancias.minimoNoImponible(5)
+		fermepin.tipo(ganancias)
+		merlin.pesoMaximo(10)
 	}
 
 	test "Conocer el nivel de hechiceria de Rolando" {
@@ -273,9 +274,11 @@ describe "Tests" {
 	}
 	
 	test "Xenia compra a Mock Hnos una espada, un collar divino (de 5 perlas), una armadura sin refuerzo y otra armadura con malla de cota cuyo valor de lucha es 5. Cuántas monedas le quedan a Xenia." {
-		xenia.comprarArtefacto(espadaDelDestino, mockHnos)
-		xenia.comprarArtefacto(collarDivino, mockHnos) 
-		xenia.comprarArtefacto(armadura, mockHnos) 
+		espadaDelDestino.peso(0)
+        xenia.comprarArtefacto(espadaDelDestino, mockHnos)
+        collarDivino.cantidadDePerlas(5)
+		xenia.comprarArtefacto(collarDivino, mockHnos)
+		xenia.comprarArtefacto(armadura, mockHnos)
 		cotaDeMalla2.valorDeLucha(5)
 		armadura2.refuerzo(cotaDeMalla2) 
 		xenia.comprarArtefacto(armadura2, mockHnos)
@@ -294,6 +297,8 @@ describe "Tests" {
 	test "Thor compra una armadura con bendición como refuerzo, y una armadura reforzada con el hechizo alacachula (del juego de datos). Cuántas monedas le quedan a Thor " {
 		armadura.refuerzo(bendicion)
 		thor.comprarArtefacto(armadura, mockHnos)
+		thor.comprarArtefacto(armadura2, mockHnos)
+		hechizoLogos.nombre("alacachula cachicomula")
 		armadura2.refuerzo(hechizoLogos)
 		thor.comprarArtefacto(armadura2, mockHnos)
 		assert.equals(74,thor.oro())
@@ -379,7 +384,7 @@ describe "Tests" {
 	}
 	
 	test "Merlin le quiere comprar a Mock Hnos. la armadura con hechizo par" {
-		assert.throwsExceptionWithMessage("Supera el peso máximo de Merlin", {merlin.comprarArtefacto(armadura4,mockHnos)})
+		assert.throwsExceptionWithMessage("No tiene oro suficiente", {merlin.comprarArtefacto(armadura4,mockHnos)})
 	}
 	
 	test "Ursula carga con 14 kilos iniciales (11 de la armadura con cota de malla y 3 de la máscara oscura). Decide desprenderse de la armadura con cota de malla. Calcular cuál es el peso total con el que carga Ursula ahora" {
@@ -420,23 +425,23 @@ describe "Tests" {
 	
 	test "Recategorizar a Pastoriza.Hacer que Ursula le compre la máscara oscura a Pastoriza" {
 		ursula.oro(100)
-		ursula.comprarArtefacto(mascaraOscura2,pastoriza)
 		pastoriza.recategorizar()
+		ursula.comprarArtefacto(mascaraOscura2,pastoriza)
 		assert.equals(88.2,ursula.oro())  
 	}
 	
 	test "Recategorizar dos veces a Pastoriza.Hacer que Ursula le compre la máscara oscura a Pastoriza" {
 		ursula.oro(100)
+		pastoriza.recategorizar()
+		pastoriza.recategorizar()
 		ursula.comprarArtefacto(mascaraOscura2,pastoriza)
-		pastoriza.recategorizar()
-		pastoriza.recategorizar()
 		assert.equals(87.9,ursula.oro())
 	}
 	
 	test "Recategorizar a Prieto.Hacer que Ursula le compre la máscara oscura a Prieto" {
 		ursula.oro(100)
-		ursula.comprarArtefacto(mascaraOscura2,prieto)
 		prieto.recategorizar()
+		ursula.comprarArtefacto(mascaraOscura2,prieto)
 		assert.equals(88.25,ursula.oro())
 	}
 	

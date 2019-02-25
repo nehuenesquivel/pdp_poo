@@ -87,7 +87,7 @@ class Comerciante {
 }
 
 object independiente {
-	method costoAdicionalArtefacto(_artefacto, personaje, comision)	= comision
+	method costoAdicionalArtefacto(_artefacto, personaje, comision)	=  _artefacto.precio() * comision
 	method costoAdicionalHechizo(_hechizo, _artefacto, personaje, comision)	= comision
 }
 
@@ -101,7 +101,7 @@ object ganancias {
 	
 	method costoAdicionalArtefacto(_artefacto, personaje, comision)	{
 		if (_artefacto.precio() > minimoNoImponible) {
-			return (minimoNoImponible - _artefacto.precio()) * 0.35
+			return (_artefacto.precio() - minimoNoImponible) * 0.35
 		} else {
 			return 0
 		}
@@ -280,7 +280,7 @@ class CotaDeMalla inherits Refuerzo {
 	
 	override method peso() = peso
 	override method valor(personaje) = 1
-	override method precio() = (valorDeLucha / 2) - armadura.valorBase() 
+	override method precio() = valorDeLucha / 2
 }
 
 class Bendicion inherits Refuerzo {
@@ -290,7 +290,7 @@ class Bendicion inherits Refuerzo {
 
 object ninguno inherits Refuerzo {
 	override method valor(personaje) = 0
-	override method precio() = 0
+	override method precio() = 2
 }
 
 object libroDeHechizos inherits Hechizo {
